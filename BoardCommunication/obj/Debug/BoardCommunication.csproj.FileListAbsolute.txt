@@ -1,0 +1,9 @@
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\BoardCommunication.exe.config
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\BoardCommunication.exe
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\BoardCommunication.pdb
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.csprojResolveAssemblyReference.cache
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.Properties.Resources.resources
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.csproj.GenerateResource.Cache
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.exe
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.pdb
+c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.Form1.resources
