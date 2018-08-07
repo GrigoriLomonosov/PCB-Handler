@@ -14,16 +14,19 @@ namespace BoardCommunication
     {
         private string outputfile;
 
+        // Persian separator in Excel
+        private string sep = ",";
+
         // Responsible for communication to the database
         DataBaseCommunicator dbCommunicator = new DataBaseCommunicator();
 
         public FileCreator()
         {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            outputfile = Path.Combine(folder, "log.txt");
+            outputfile = Path.Combine(folder, "log.csv");
             using (StreamWriter file = new StreamWriter(outputfile))
             {
-                file.WriteLine("Node    CallTime    CallDate    CancelTime  CancelDate  OnTime  OffTime CancelKey");
+                file.WriteLine("Node" + sep + "CallTime" + sep + "CallDate" + sep + "CancelTime" + sep + "CancelDate" + sep + "OnTime" + sep + "OffTime" + sep + "CancelKey");
             }
         }
 
@@ -100,13 +103,13 @@ namespace BoardCommunication
         private void WriteFileRecordToFile(LogFilerecord record)
         {
             // Create the line to write
-            string line = record.node + "   "
-                + record.callTime + "   "
-                + record.callDate + "   "
-                + record.cancelTime + " "
-                + record.cancelDate + " "
-                + record.onTime + " "
-                + record.offTime + "    "
+            string line = record.node + sep
+                + record.callTime + sep
+                + record.callDate + sep
+                + record.cancelTime + sep
+                + record.cancelDate + sep
+                + record.onTime + sep
+                + record.offTime + sep
                 + record.cancelKey;
 
             //outputfile.WriteLine(line);
