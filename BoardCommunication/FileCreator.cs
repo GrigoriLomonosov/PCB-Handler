@@ -14,7 +14,7 @@ namespace BoardCommunication
     {
         private string outputfile;
 
-        // Persian separator in Excel
+        // Separator in Excel
         private string sep = ",";
 
         // Responsible for communication to the database

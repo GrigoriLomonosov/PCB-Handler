@@ -21,14 +21,28 @@ namespace BoardCommunication
         private StopBits stopbits = (StopBits)Enum.Parse(typeof(StopBits), System.Configuration.ConfigurationManager.AppSettings["stopbits"]);
         private Parity parity = (Parity)Enum.Parse(typeof(Parity), System.Configuration.ConfigurationManager.AppSettings["parity"]);
 
-        // Keeps track of the data that was read through the serial port
-        string readData;
+        // Strings from app.config to communicate with client
+        private string dateSetOK = System.Configuration.ConfigurationManager.AppSettings["dateSetOK"];
+        private string dateSetNOK = System.Configuration.ConfigurationManager.AppSettings["dateSetNOK"];
+        private string timeSetOK = System.Configuration.ConfigurationManager.AppSettings["timeSetOK"];
+        private string timeSetNOK = System.Configuration.ConfigurationManager.AppSettings["timeSetNOK"];
+        private string volumeSetOK = System.Configuration.ConfigurationManager.AppSettings["volumeSetOK"];
+        private string volumeSetNOK = System.Configuration.ConfigurationManager.AppSettings["volumeSetNOK"];
+
+        // Contains certain methods for dataprocessing
+        CommonUtilities common = new CommonUtilities();
 
         // Variable to check for how many ACK's the application is waiting, after any type of update. 
         int waitingForAck = 0;
         
         // Responsible for communication to the database
         DataBaseCommunicator dbCommunicator = new DataBaseCommunicator();
+
+        // Event to be fired after receiving an ACK through the serial port. 
+        public event EventHandler<AckReceivedEventArgs> ackReceived;
+
+        // Keeps track of the data that was read through the serial port
+        string readData;
 
         private SerialPort port;
 
@@ -39,14 +53,37 @@ namespace BoardCommunication
             port.DataReceived += new SerialDataReceivedEventHandler(DataInPort);
             if (!port.IsOpen)
             {
-                //TODO do not forget to uncomment
-                //port.Open();
-                //CheckingForLog();
+                port.Open();
+                CheckingForLog();
             }
             else
             {
                 Console.WriteLine("Cannot open a port more than once");
             }
+        }
+
+        /// <summary>
+        /// This method is needed to handle Ack received events
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnACKReceived(AckReceivedEventArgs e)
+        {
+            EventHandler<AckReceivedEventArgs> handler = ackReceived;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Sets the message in the ACK received event and fires the event
+        /// </summary>
+        /// <param name="message">The message in the ACK received event</param>
+        private void SetArgsAndFireEvent(string message)
+        {
+            AckReceivedEventArgs args = new AckReceivedEventArgs();
+            args.Ack = message;
+            OnACKReceived(args);
         }
 
         /// <summary>
@@ -109,7 +146,8 @@ namespace BoardCommunication
         /// </summary>
         private void CheckingForLog()
         {
-            var logTimer = new Timer(CheckTheLog, null, 1000, 500);
+            // Important to use the timer of System.Threading instead of System.Timers
+            var logTimer = new System.Threading.Timer(CheckTheLog, null, 1000, 500);
         }
 
         private void CheckTheLog(object state)
@@ -134,10 +172,13 @@ namespace BoardCommunication
 
                 // Step 2: convert the integers to hex
                 string hexString = (received.Year - 2000).ToString("X2") + received.Month.ToString("X2") + received.Day.ToString("X2");
-                byte[] bytes = HexStringToByteArray(hexString);
+                byte[] bytes = common.HexStringToByteArray(hexString);
 
                 // Step 3: Write the bytes
                 port.Write(bytes, 0, 3);
+
+                //TODO remove testcode
+                SetArgsAndFireEvent(dateSetOK);
             }
             catch(OverflowException e)
             {
@@ -162,10 +203,13 @@ namespace BoardCommunication
 
                 // Step 2: convert the integers to hex
                 string hexString = received.Hour.ToString("X2") + received.Minute.ToString("X2") + received.Second.ToString("X2");
-                byte[] bytes = HexStringToByteArray(hexString);
+                byte[] bytes = common.HexStringToByteArray(hexString);
 
                 // step 3: write the bytes
                 port.Write(bytes, 0, 3);
+
+                //TODO remove testcode
+                SetArgsAndFireEvent(timeSetOK);
             }
             catch (Exception e)
             {
@@ -198,10 +242,13 @@ namespace BoardCommunication
 
                 //Step 2: Convert to byte-array
                 string hexString = volume.ToString("X2");
-                byte[] bytes = HexStringToByteArray(hexString);
+                byte[] bytes = common.HexStringToByteArray(hexString);
 
                 //Step 3: Write the results
                 port.Write(bytes, 0,1);
+
+                //TODO remove testcode
+                SetArgsAndFireEvent(volumeSetOK);
                 return true;
             }
             catch (Exception e)
@@ -211,45 +258,13 @@ namespace BoardCommunication
                 return false;
             }
         }
+    }
 
-        /// <summary>
-        /// Returns a byte-array for a given string containing hex-numbers.
-        /// </summary>
-        /// <param name="hex">The hex-string should contain an even number of characters</param>
-        /// <returns>An array holding the different bytes in the hex-string</returns>
-        private byte[] HexStringToByteArray(string hex)
-        {
-            int offset = hex.StartsWith("0x") ? 2 : 0;
-            if ((hex.Length % 2) != 0)
-            {
-                throw new ArgumentException("Invalid length: " + hex.Length);
-            }
-            byte[] ret = new byte[(hex.Length - offset) / 2];
-
-            for (int i = 0; i < ret.Length; i++)
-            {
-                ret[i] = (byte)((ParseNybble(hex[offset]) << 4)
-                                 | ParseNybble(hex[offset + 1]));
-                offset += 2;
-            }
-            return ret;
-        }
-
-        private int ParseNybble(char c)
-        {
-            if (c >= '0' && c <= '9')
-            {
-                return c - '0';
-            }
-            if (c >= 'A' && c <= 'F')
-            {
-                return c - 'A' + 10;
-            }
-            if (c >= 'a' && c <= 'f')
-            {
-                return c - 'a' + 10;
-            }
-            throw new ArgumentException("Invalid hex digit: " + c);
-        }
+    /// <summary>
+    /// Responsible to raise an event with a certain string as message
+    /// </summary>
+    public class AckReceivedEventArgs : EventArgs
+    {
+        public string Ack { get; set; }
     }
 }

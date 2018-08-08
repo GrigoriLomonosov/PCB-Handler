@@ -19,6 +19,7 @@ namespace BoardCommunication
         public Form1()
         {
             InitializeComponent();
+            boardCommunicator.ackReceived += HandleReceivedACK;
         }
 
         /// <summary>
@@ -62,7 +63,19 @@ namespace BoardCommunication
         public void CreateLogSummaryFile(object sender, EventArgs e)
         {
             fileCreator.CreateLogSummaryFile();
+            //TODO check for correct string
+            MessageBox.Show("teststring");
             Console.WriteLine("pressed create log");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="a"></param>
+        void HandleReceivedACK(object sender, AckReceivedEventArgs a)
+        { 
+            MessageBox.Show(a.Ack);
         }
     }
 }

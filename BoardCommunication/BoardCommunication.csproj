@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonUtilities.cs" />
     <Compile Include="DataBaseCommunicator.cs" />
     <Compile Include="BoardCommunicator.cs" />
     <Compile Include="FileCreator.cs" />
