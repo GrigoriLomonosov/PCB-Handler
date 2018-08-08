@@ -6,4 +6,4 @@ c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommu
 c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.csproj.GenerateResource.Cache
 c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.exe
 c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.pdb
-c:\users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.Form1.resources
+C:\Users\tac\Documents\Visual Studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.Board_Communicator.resources

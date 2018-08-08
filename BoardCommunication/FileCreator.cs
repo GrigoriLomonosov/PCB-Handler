@@ -30,9 +30,23 @@ namespace BoardCommunication
             }
         }
 
-        public void CreateLogSummaryFile()
+        /// <summary>
+        /// Creates a file holding all the data of the logs in an analyzed form
+        /// </summary>
+        /// <returns>true if the writing to file was successful, false otherwise</returns>
+        public bool CreateLogSummaryFile()
         {
-            processData(dbCommunicator.GetAllLogRecords());
+            try
+            {
+                processData(dbCommunicator.GetAllLogRecords());
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR: writing to file failed: " + e.Message);
+                return false;
+            }
+            
         }
 
         private void processData(List<LogDbRecord> list)

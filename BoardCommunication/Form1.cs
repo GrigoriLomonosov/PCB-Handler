@@ -11,12 +11,14 @@ using System.Collections;
 
 namespace BoardCommunication
 {
-    public partial class Form1 : Form
+    public partial class Board_Communicator : Form
     {
         private BoardCommunicator boardCommunicator = new BoardCommunicator();
 
         private FileCreator fileCreator = new FileCreator();
-        public Form1()
+
+        private int closeAfterMillis = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["closeAfterMillis"]);
+        public Board_Communicator()
         {
             InitializeComponent();
             boardCommunicator.ackReceived += HandleReceivedACK;
@@ -51,8 +53,8 @@ namespace BoardCommunication
         /// <param name="e"></param>
         public void UpdateVolume(object sender, EventArgs e)
         {
-            boardCommunicator.UpdateVolume(numericUpDown1.Value);
-            Console.WriteLine("pressed update volume");
+            boardCommunicator.UpdateVolume(Int32.Parse(textBox1.Text));
+            Console.WriteLine("pressed update volume: " + textBox1.Text);
         }
 
         /// <summary>
@@ -62,20 +64,37 @@ namespace BoardCommunication
         /// <param name="e"></param>
         public void CreateLogSummaryFile(object sender, EventArgs e)
         {
-            fileCreator.CreateLogSummaryFile();
-            //TODO check for correct string
-            MessageBox.Show("teststring");
+            if (fileCreator.CreateLogSummaryFile())
+            {
+                //TODO change message box if needed
+                //AutoClosingMessageBox.Show("Text", "Caption", closeAfterMillis);
+                MessageBox.Show("Successfully written to file");
+            }
+            else
+            {
+                //TODO check for correct string and change MessageBox if needed
+                MessageBox.Show("ERROR: failed to write to file");
+                //AutoClosingMessageBox.Show("Text", "Caption", closeAfterMillis);
+            }
             Console.WriteLine("pressed create log");
         }
 
         /// <summary>
-        /// 
+        /// When an ACK is received through the serial port, an automatically closing messagebox is shown with the received ACK.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="a"></param>
         void HandleReceivedACK(object sender, AckReceivedEventArgs a)
-        { 
+        {
+            //TODO change to select the wanted MessageBox
             MessageBox.Show(a.Ack);
+            //AutoClosingMessageBox.Show(a.Ack, "Received Message from port", closeAfterMillis);
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(trackBar1, trackBar1.Value.ToString());
+            textBox1.Text = trackBar1.Value.ToString();
         }
     }
 }

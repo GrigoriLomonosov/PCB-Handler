@@ -44,11 +44,16 @@ namespace BoardCommunication
         // Keeps track of the data that was read through the serial port
         string readData;
 
+        // Contains for every ACK an appropriate message
+        Dictionary<string, string> acks = new Dictionary<string, string>();
+
+        // The serial port to communicate with
         private SerialPort port;
 
 
         public BoardCommunicator()
         {
+            FillAckDictionary();
             port = new SerialPort(portName, bps, parity, nrOfDatabits, stopbits);
             port.DataReceived += new SerialDataReceivedEventHandler(DataInPort);
             if (!port.IsOpen)
@@ -127,8 +132,35 @@ namespace BoardCommunication
             else
             {
                 Console.WriteLine(receivedString);
+                SetArgsAndFireEvent(SelectCorrectAnswer(receivedString));
                 waitingForAck--;
             }
+        }
+
+        private void FillAckDictionary()
+        {
+            //TODO check if these strings are correct as key in the dictionary
+            acks["DATE SET OK"] = dateSetOK;
+            acks["DATE SET NOK"] = dateSetNOK;
+            acks["TIME SET OK"] = timeSetOK;
+            acks["TIME SET NOK"] = timeSetNOK;
+            acks["VOL SET OK"] = volumeSetOK;
+            acks["VOL SET NOK"] = volumeSetNOK;
+        }
+        
+        /// <summary>
+        /// Selects a response string for a given ACK
+        /// </summary>
+        /// <param name="ACK">The ACK received through the serial port</param>
+        /// <returns>A message</returns>
+        private string SelectCorrectAnswer(string ACK)
+        {
+            string result = null;
+            if (!acks.TryGetValue(ACK, out result))
+            { /* key doesn't exist */
+                Console.WriteLine("ERROR: Did not find recognize the ACK as key");
+            }
+            return result;
         }
 
         /// <summary>
@@ -178,7 +210,7 @@ namespace BoardCommunication
                 port.Write(bytes, 0, 3);
 
                 //TODO remove testcode
-                SetArgsAndFireEvent(dateSetOK);
+                //SetArgsAndFireEvent(dateSetOK);
             }
             catch(OverflowException e)
             {
@@ -209,7 +241,7 @@ namespace BoardCommunication
                 port.Write(bytes, 0, 3);
 
                 //TODO remove testcode
-                SetArgsAndFireEvent(timeSetOK);
+                //SetArgsAndFireEvent(timeSetOK);
             }
             catch (Exception e)
             {
@@ -222,8 +254,7 @@ namespace BoardCommunication
         /// Updates the volume of the alarm of the PCB-board
         /// </summary>
         /// <param name="received">The update should be done to the received value. A value between 20 and 65 should be given (not included)</param>
-        /// <returns>True if update was successful, false otherwise</returns>
-        public bool UpdateVolume(decimal received)
+        public void UpdateVolume(decimal received)
         {
             try
             {
@@ -233,7 +264,6 @@ namespace BoardCommunication
                 {
                     waitingForAck--;
                     Console.WriteLine("Please enter a number >20 and <65");
-                    return false;
                 }
 
                 //Step 1: Notify change volume
@@ -248,14 +278,12 @@ namespace BoardCommunication
                 port.Write(bytes, 0,1);
 
                 //TODO remove testcode
-                SetArgsAndFireEvent(volumeSetOK);
-                return true;
+                //SetArgsAndFireEvent(volumeSetOK);
             }
             catch (Exception e)
             {
                 Console.WriteLine("ERROR: unable to create update string for volume. " + e.Message);
                 waitingForAck--;
-                return false;
             }
         }
     }
