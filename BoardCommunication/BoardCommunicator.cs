@@ -84,17 +84,19 @@ namespace BoardCommunication
         /// Sets the message in the ACK received event and fires the event
         /// </summary>
         /// <param name="message">The message in the ACK received event</param>
-        private void SetArgsAndFireEvent(string message)
+        /// <param name="originalMessage">The original message received from the board</param>
+        private void SetArgsAndFireEvent(string message, string originalMessage)
         {
             AckReceivedEventArgs args = new AckReceivedEventArgs();
             args.Ack = message;
+            args.originalACK = originalMessage;
             OnACKReceived(args);
         }
 
         /// <summary>
         /// When data is received through the COM-port, DataInport handles this event. 
         /// The date, node, event,time, tag are extracted and used to add a record to a database of logs. 
-        /// After correct entry of the data in the datbase, an acknowledgment to the PCB-board is sent.
+        /// After correct entry of the data in the database, an acknowledgment to the PCB-board is sent.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -120,7 +122,13 @@ namespace BoardCommunication
                 {
                     if (dbCommunicator.AddBoardLogToDatabase(splittedString[2], splittedString[3], splittedString[4], splittedString[5], splittedString[6]))
                     {
-                        SendData();
+                        try {
+                            SendData();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Problem sending ACK to board: " + e.Message);
+                        }
                     }
                 }
                 else
@@ -132,20 +140,29 @@ namespace BoardCommunication
             else
             {
                 Console.WriteLine(receivedString);
-                SetArgsAndFireEvent(SelectCorrectAnswer(receivedString));
-                waitingForAck--;
+                // Extra line to check for incorrect format from board
+                if(receivedString.Contains("DATE SET OK"))
+                {
+                    receivedString = "DATE SET OK\r\n";
+                }
+                string ACK = SelectCorrectAnswer(receivedString);
+                if (ACK != null)
+                {
+                    SetArgsAndFireEvent(ACK, receivedString);
+                    waitingForAck--;
+                }
             }
         }
 
         private void FillAckDictionary()
         {
             //TODO check if these strings are correct as key in the dictionary
-            acks["DATE SET OK"] = dateSetOK;
-            acks["DATE SET NOK"] = dateSetNOK;
-            acks["TIME SET OK"] = timeSetOK;
-            acks["TIME SET NOK"] = timeSetNOK;
-            acks["VOL SET OK"] = volumeSetOK;
-            acks["VOL SET NOK"] = volumeSetNOK;
+            acks["DATE SET OK\r\n"] = dateSetOK;
+            acks["DATE SET NOK\r\n"] = dateSetNOK;
+            acks["TIME SET OK\r\n"] = timeSetOK;
+            acks["TIME SET NOK\r\n"] = timeSetNOK;
+            acks["VOL SET OK\r\n"] = volumeSetOK;
+            acks["VOL SET NOK\r\n"] = volumeSetNOK;
         }
         
         /// <summary>
@@ -158,7 +175,8 @@ namespace BoardCommunication
             string result = null;
             if (!acks.TryGetValue(ACK, out result))
             { /* key doesn't exist */
-                Console.WriteLine("ERROR: Did not find recognize the ACK as key");
+                Console.WriteLine("ERROR: Did not recognize the ACK as key");
+                return null;  //"undefined ACK received from board: " + ACK;
             }
             return result;
         }
@@ -241,7 +259,7 @@ namespace BoardCommunication
                 port.Write(bytes, 0, 3);
 
                 //TODO remove testcode
-                //SetArgsAndFireEvent(timeSetOK);
+                //SetArgsAndFireEvent(SelectCorrectAnswer("TIME SET OK"));
             }
             catch (Exception e)
             {
@@ -294,5 +312,6 @@ namespace BoardCommunication
     public class AckReceivedEventArgs : EventArgs
     {
         public string Ack { get; set; }
+        public string originalACK { get; set; }
     }
 }
