@@ -7,3 +7,9 @@ C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommu
 C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.exe
 C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.pdb
 C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\obj\Debug\BoardCommunication.csprojResolveAssemblyReference.cache
+C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\Stimulsoft.Base.dll
+C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\Stimulsoft.Report.dll
+C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\Stimulsoft.Base.pdb
+C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\Stimulsoft.Base.xml
+C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\Stimulsoft.Report.pdb
+C:\Users\tac\documents\visual studio 2015\Projects\BoardCommunication\BoardCommunication\bin\Debug\Stimulsoft.Report.xml

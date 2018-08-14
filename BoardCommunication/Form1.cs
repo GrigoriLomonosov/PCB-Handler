@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace BoardCommunication
 {
@@ -20,6 +21,10 @@ namespace BoardCommunication
         private int closeAfterMillis = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["closeAfterMillis"]);
 
         private int previousVolumeValue = 21;
+
+        // Possibilities to filter in datagridview
+        private string[] colNames = new string[] { "date", "time", "event", "time", "tag" };
+
         public Board_Communicator()
         {
             InitializeComponent();
@@ -47,17 +52,6 @@ namespace BoardCommunication
             boardCommunicator.UpdateDate();
             Console.WriteLine("pressed update date");
         }
-
-        ///// <summary>
-        ///// Updates the volume of the PCB-board. Only values greater than 20 and smaller than 65 are allowed
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //public void UpdateVolume(object sender, EventArgs e)
-        //{
-        //    //boardCommunicator.UpdateVolume(Int32.Parse(textBox1.Text));
-        //    Console.WriteLine("pressed update volume: " + textBox1.Text);
-        //}
 
         /// <summary>
         /// Creates a file, which summarizes the log in the from the PCB-boards
@@ -127,6 +121,78 @@ namespace BoardCommunication
             // TODO: This line of code loads data into the 'pCBLogsDataSet.PCBLogs' table. You can move, or remove it, as needed.
             this.pCBLogsTableAdapter.Fill(this.pCBLogsDataSet.PCBLogs);
 
+        }
+
+        private void FilterDataGridView(object sender, EventArgs e)
+        {
+            string selectedCase = "";
+            if (comboBox1.SelectedItem != null)
+            {
+                selectedCase = comboBox1.SelectedItem.ToString();
+            }
+
+            // Filter according to the selected case from the dropdown
+            switch (selectedCase)
+            {
+                case "date":
+                    Console.WriteLine("Case 1");
+                    //TODO
+                    break;
+                case "node":
+                    Console.WriteLine("Case 2");
+                    //TODO
+                    break;
+                case "event":
+                    Console.WriteLine("Case 2");
+                    //TODO
+                    break;
+                case "time":
+                    Console.WriteLine("Case 2");
+                    //TODO
+                    break;
+                case "tag":
+                    //TODO
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        /// <summary>
+        /// Checks if a given string is in the following format: yyyy/mm/dd
+        /// </summary>
+        /// <param name="date">The string to check</param>
+        /// <returns>True if the inputstring is in the correct format, false otherwise</returns>
+        private bool checkFormatDate(string date)
+        {
+            //TODO
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if a given string is an integer, that can be represented on the current machine.
+        /// </summary>
+        /// <param name="number">The inputstring</param>
+        /// <returns>True if the input is an integer, false otherwise</returns>
+        private bool checkIfInteger(string number)
+        {
+            //TODO check an correct this method
+            if (number.Trim().Length > int.MaxValue)
+            {
+                return false;
+            }
+            return Regex.IsMatch(number.Trim(), @"^\d+$");
+        }
+
+        /// <summary>
+        /// Checks if a given string is in the following format: hh:mm:ss
+        /// </summary>
+        /// <param name="time">The input string</param>
+        /// <returns>True if the string is in the correct format, false otherwise</returns>
+        private bool checkFormatTime(string time)
+        {
+            return true;
         }
     }
 }

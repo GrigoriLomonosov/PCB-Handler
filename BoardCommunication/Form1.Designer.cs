@@ -40,20 +40,23 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.stiReport1 = new Stimulsoft.Report.StiReport();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.stiReportDataSource1 = new Stimulsoft.Report.Design.StiReportDataSource("dataGridView1", this.dataGridView1);
-            this.pCBLogsDataSet = new BoardCommunication.PCBLogsDataSet();
-            this.pCBLogsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.pCBLogsTableAdapter = new BoardCommunication.PCBLogsDataSetTableAdapters.PCBLogsTableAdapter();
             this.iDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eventDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tagDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pCBLogsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pCBLogsDataSet = new BoardCommunication.PCBLogsDataSet();
+            this.stiReportDataSource1 = new Stimulsoft.Report.Design.StiReportDataSource("dataGridView1", this.dataGridView1);
+            this.pCBLogsTableAdapter = new BoardCommunication.PCBLogsDataSetTableAdapters.PCBLogsTableAdapter();
+            this.button5 = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBLogsDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBLogsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBLogsDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -167,29 +170,10 @@
             this.timeDataGridViewTextBoxColumn,
             this.tagDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.pCBLogsBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(124, 267);
+            this.dataGridView1.Location = new System.Drawing.Point(53, 267);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(642, 180);
+            this.dataGridView1.Size = new System.Drawing.Size(660, 172);
             this.dataGridView1.TabIndex = 14;
-            // 
-            // stiReportDataSource1
-            // 
-            this.stiReportDataSource1.Item = this.dataGridView1;
-            this.stiReportDataSource1.Name = "dataGridView1";
-            // 
-            // pCBLogsDataSet
-            // 
-            this.pCBLogsDataSet.DataSetName = "PCBLogsDataSet";
-            this.pCBLogsDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // pCBLogsBindingSource
-            // 
-            this.pCBLogsBindingSource.DataMember = "PCBLogs";
-            this.pCBLogsBindingSource.DataSource = this.pCBLogsDataSet;
-            // 
-            // pCBLogsTableAdapter
-            // 
-            this.pCBLogsTableAdapter.ClearBeforeFill = true;
             // 
             // iDDataGridViewTextBoxColumn
             // 
@@ -228,11 +212,59 @@
             this.tagDataGridViewTextBoxColumn.HeaderText = "Tag";
             this.tagDataGridViewTextBoxColumn.Name = "tagDataGridViewTextBoxColumn";
             // 
+            // pCBLogsBindingSource
+            // 
+            this.pCBLogsBindingSource.DataMember = "PCBLogs";
+            this.pCBLogsBindingSource.DataSource = this.pCBLogsDataSet;
+            // 
+            // pCBLogsDataSet
+            // 
+            this.pCBLogsDataSet.DataSetName = "PCBLogsDataSet";
+            this.pCBLogsDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // stiReportDataSource1
+            // 
+            this.stiReportDataSource1.Item = this.dataGridView1;
+            this.stiReportDataSource1.Name = "dataGridView1";
+            // 
+            // pCBLogsTableAdapter
+            // 
+            this.pCBLogsTableAdapter.ClearBeforeFill = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(520, 464);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 15;
+            this.button5.Text = "Filter";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.FilterDataGridView);
+            // 
+            // comboBox1
+            // date node event time tag
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(colNames);
+            this.comboBox1.Location = new System.Drawing.Point(149, 464);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 16;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(311, 466);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(172, 20);
+            this.textBox3.TabIndex = 17;
+            // 
             // Board_Communicator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 566);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label3);
@@ -247,8 +279,8 @@
             this.Load += new System.EventHandler(this.Board_Communicator_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pCBLogsDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pCBLogsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pCBLogsDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -278,6 +310,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn eventDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn tagDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 
